@@ -1,7 +1,13 @@
 const SHORT_URL_REGEX = /^(https?:\/\/)?(www\.)?youtube\.com\/shorts(\/|$)/;
 const YOUTUBE_HOMEPAGE_URL = "https://www.youtube.com";
 
-chrome.tabs.onUpdated.addListener((tab_id, change_info, _) => {
+chrome.tabs.onUpdated.addListener(async (tab_id, change_info, _) => {
+    // Check whether feature is enabled.
+    const { feature_toggle } = await chrome.storage.sync.get("url_intercept");
+    if (!feature_toggle) {
+        return;
+    }
+
     // Log event.
     const url = change_info.url;
     console.debug(`Detected url change in tab ${tab_id} to url ${url}.`);

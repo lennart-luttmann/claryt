@@ -5,16 +5,16 @@
     "description": "A Chromium extension to prevent short form videos from appearing in your feed.",
     "permissions": ["tabs", "activeTab", "storage"],
     "action": {
-        "default_popup": "popup/index.html"
+        "default_popup": "dashboard/index.html"
     },
     "background": {
-        "service_worker": "background/main.js",
+        "service_worker": "background.js",
         "type": "module"
     },
     "content_scripts": [
         {
             "matches": ["*://*.youtube.com/*"],
-            "js": ["content/content.js"],
+            "js": ["content.js"],
             "run_at": "document_idle"
         }
     ]
