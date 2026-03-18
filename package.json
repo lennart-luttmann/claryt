@@ -1,0 +1,15 @@
+{
+    "name": "chromium-extension",
+    "version": "1.0.0",
+    "description": "A Chromium browser extension",
+    "type": "module",
+    "scripts": {
+        "build": "node build.js",
+        "clean": "rm -rf build"
+    },
+    "devDependencies": {
+        "@types/chrome": "^0.0.287",
+        "eslint": "^9.0.0",
+        "typescript": "^5.9.3"
+    }
+}
