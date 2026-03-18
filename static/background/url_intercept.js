@@ -1,4 +1,4 @@
-const SHORT_URL_REGEX = /.*\.youtube\.com\/shorts\/?.*/;
+const SHORT_URL_REGEX = /^(https?:\/\/)?(www\.)?youtube\.com\/shorts(\/|$)/;
 const YOUTUBE_HOMEPAGE_URL = "https://www.youtube.com";
 
 chrome.tabs.onUpdated.addListener((tab_id, change_info, _) => {
