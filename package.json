@@ -1,10 +1,10 @@
 {
-    "name": "chromium-extension",
+    "name": "yt-longs",
     "version": "1.0.0",
-    "description": "A Chromium browser extension",
+    "description": "A Chromium browser extension to block Youtube shorts",
     "type": "module",
     "scripts": {
-        "build": "node build.js",
+        "build": "node scripts/build.js",
         "clean": "rm -rf build"
     },
     "devDependencies": {
