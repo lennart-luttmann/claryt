@@ -1,14 +1,9 @@
-function feedwatcher(){
-    const items = document.querySelectorALL("ytd-rich-item-renderer, ytd-video-renderer, ytd-reel-shelf-renderer");
-
-    shelf.forEach(el=> {
-        if (el.querySelector(""'a[href*="/shorts/"]') || el.querySelector('ytd-thumbnail-overlay-time-status-renderer')){
-            el.remove();
-        }
-    });
+function feedwatcher() {
+    document
+        .querySelectorAll("ytm-shorts-lockup-view-model-v2")
+        .forEach((el) => el.closest("ytd-rich-shelf-renderer")?.remove());
 }
 feedwatcher();
-
 
 let timeout;
 const observer = new MutationObserver(() => {
@@ -18,5 +13,5 @@ const observer = new MutationObserver(() => {
 
 observer.observe(document.body, {
     childList: true,
-    subtree: true
+    subtree: true,
 });
