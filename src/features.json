@@ -1,0 +1,8 @@
+[
+    {
+        "flag": "url_intercept",
+        "name": "Disable YouTube Shorts urls.",
+        "desc": "Make any YouTube Shorts url redirect back to the YouTube homepage.",
+        "enabled": true
+    }
+]
