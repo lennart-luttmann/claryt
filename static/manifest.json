@@ -14,7 +14,7 @@
     "content_scripts": [
         {
             "matches": ["*://*.youtube.com/*"],
-            "js": ["content.js"],
+            "js": ["content/feedwatcher.js"],
             "run_at": "document_idle"
         }
     ]
