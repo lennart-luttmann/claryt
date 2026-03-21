@@ -3,12 +3,12 @@
     "name": "Youtube Longs",
     "version": "0.1.0",
     "description": "A Chromium extension to prevent short form videos from appearing in your feed.",
-    "permissions": ["activeTab", "storage"],
+    "permissions": ["tabs", "activeTab", "storage"],
     "action": {
-        "default_popup": "popup.html"
+        "default_popup": "popup/index.html"
     },
     "background": {
-        "service_worker": "background.js",
+        "service_worker": "background/main.js",
         "type": "module"
     },
     "content_scripts": [
