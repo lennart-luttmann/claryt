@@ -1,9 +1,15 @@
+import path from "path";
 import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
 import { viteStaticCopy } from "vite-plugin-static-copy";
 
 export default defineConfig({
     root: "src",
+    resolve: {
+        alias: {
+            $: path.resolve(__dirname, "src"),
+        },
+    },
     plugins: [
         svelte(),
         viteStaticCopy({

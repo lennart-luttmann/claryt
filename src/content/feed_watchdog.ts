@@ -1,10 +1,11 @@
-import { getFeatureFlag } from "$/background/storage_cache";
-
 function feed_watchdog() {
-    if (!getFeatureFlag("feed_watchdog")) {
-        return;
-    }
-    document.querySelectorAll("ytm-shorts-lockup-view-model-v2").forEach((el) => el.closest("ytd-rich-shelf-renderer")?.remove());
+    chrome.storage.sync.get("feature_flag.feed_watchdog").then((feature_flag) => {
+        if (!!feature_flag["feature_flag.feed_watchdog"]) {
+            document
+                .querySelectorAll("ytm-shorts-lockup-view-model-v2")
+                .forEach((el) => el.closest("ytd-rich-shelf-renderer")?.remove());
+        }
+    });
 }
 feed_watchdog();
 

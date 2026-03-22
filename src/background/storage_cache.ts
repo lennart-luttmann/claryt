@@ -1,26 +1,25 @@
 import features from "$/features.json";
 
-/** Synchronous cache for stored feature flag states. */
-let feature_flag_cache: Record<string, boolean> = {};
+/** Prefix used to mark feature flags in chrome storage. */
+const FEATURE_FLAG_PREFIX = "feature_flag.";
+
+// Extract default keys and initial values.
+const default_feature_flag_states: Record<string, boolean> = Object.fromEntries(
+    features.map((f) => ["feature_flag." + f.flag, f.enabled]),
+);
+
+// Set default values in storage.
+const feature_flag_storage_init_promise = chrome.storage.sync.get().then((storage_feature_flags) => {
+    console.debug("Retrieved stored feature flag states: ", storage_feature_flags);
+    const stored: Record<string, boolean> =
+        Object.fromEntries(Object.entries(storage_feature_flags).filter(([key]) => key.startsWith(FEATURE_FLAG_PREFIX))) ?? {};
+    chrome.storage.sync.set({ ...default_feature_flag_states, ...stored });
+});
 
 /** Get the current state of a feature flag.*/
-function getFeatureFlag(flag: string): boolean {
-    return feature_flag_cache[flag] ?? false;
+async function asyncGetFeatureFlag(flag: string): Promise<boolean> {
+    await feature_flag_storage_init_promise;
+    return (await chrome.storage.sync.get(FEATURE_FLAG_PREFIX + flag))[FEATURE_FLAG_PREFIX + flag] ?? false;
 }
 
-// Sync cache when storage updates.
-chrome.storage.sync.onChanged.addListener((changes) => {
-    console.debug("Registered change to sync storage: ", changes);
-    feature_flag_cache = changes.feature_flags?.newValue ?? {};
-});
-
-// Merge stored feature flag states with defaults to account for fresh installed, added features or storage corruption.
-const default_feature_flag_states: Record<string, boolean> = Object.fromEntries(features.map((f) => [f.flag, f.enabled]));
-const feature_flag_storage_sync_promise = chrome.storage.sync.get("feature_flags", (result) => {
-    console.debug("Retrieved stored feature flag states: ", result);
-    const stored: Record<string, boolean> = result["feature_flags"] ?? {};
-    feature_flag_cache = { ...default_feature_flag_states, ...stored };
-    chrome.storage.sync.set({ feature_flags: feature_flag_cache });
-});
-
-export { getFeatureFlag, feature_flag_storage_sync_promise };
+export { asyncGetFeatureFlag, feature_flag_storage_init_promise };

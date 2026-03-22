@@ -2,19 +2,32 @@
     import { slide } from "svelte/transition";
     import features from "$/features.json";
 
-    let feature_flag_states: Record<string, boolean> = {};
+    /** Prefix used to mark feature flags in chrome storage. */
+    const FEATURE_FLAG_PREFIX = "feature_flag.";
+
+    /** Length of chrome storage feature flag prefix. */
+    const FEATURE_FLAG_PREFIX_LENGTH = "feature_flag.".length;
+
+    let feature_flag_cache: Record<string, boolean> = {};
     let expanded_flag: string | null = null;
     let hovered_flag: string | null = null;
 
-    chrome.storage.sync.get("feature_flags", (result) => {
-        feature_flag_states = result["feature_flags"] ?? {};
+    // Cache feature flag values.
+    chrome.storage.sync.get().then((storage_feature_flags) => {
+        feature_flag_cache = Object.fromEntries(
+            Object.entries(storage_feature_flags)
+                .filter(([key]) => key.startsWith(FEATURE_FLAG_PREFIX))
+                .map(([key, value]) => [key.substring(FEATURE_FLAG_PREFIX_LENGTH), value]),
+        );
     });
 
-    function updateFeatureStorage(flag: string) {
-        console.log(`Switched toggle state for flag [${flag}] to [${feature_flag_states[flag]}].`);
-        chrome.storage.sync.set({ feature_flags: { ...feature_flag_states, [flag]: feature_flag_states[flag] } });
+    /** Update the stored value of a flag with the cache. */
+    function syncFeatureStorage(flag: string) {
+        console.log(`Switched toggle state for flag [${flag}] to [${feature_flag_cache[flag]}].`);
+        chrome.storage.sync.set({ [FEATURE_FLAG_PREFIX + flag]: feature_flag_cache[flag] });
     }
 
+    /** Toggle  descriptor dropdown on a feature. */
     function toggleDescription(flag: string) {
         expanded_flag = expanded_flag === flag ? null : flag;
     }
@@ -40,9 +53,9 @@
             </span>
             <input
                 type="checkbox"
-                bind:checked={feature_flag_states[feature.flag]}
-                disabled={feature_flag_states[feature.flag] === undefined}
-                on:change={() => updateFeatureStorage(feature.flag)}
+                bind:checked={feature_flag_cache[feature.flag]}
+                disabled={feature_flag_cache[feature.flag] === undefined}
+                on:change={() => syncFeatureStorage(feature.flag)}
             />
         </div>
         {#if expanded_flag === feature.flag}
