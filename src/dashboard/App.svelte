@@ -1,28 +1,22 @@
 <script lang="ts">
     import { slide } from "svelte/transition";
-    import features from "../features.json";
+    import features from "$/features.json";
 
-    let FEATURE_STATES: Record<string, boolean> = {};
-    let expandedFlag: string | null = null;
-    let hoveredFlag: string | null = null;
+    let feature_flag_states: Record<string, boolean> = {};
+    let expanded_flag: string | null = null;
+    let hovered_flag: string | null = null;
 
-    chrome.storage.sync.get(
-        features.map((f) => f.flag),
-        (result) => {
-            console.debug("Retrieved feature states from storage: ", result);
-            FEATURE_STATES = result as Record<string, boolean>;
-        },
-    );
+    chrome.storage.sync.get("feature_flags", (result) => {
+        feature_flag_states = result["feature_flags"] ?? {};
+    });
 
     function updateFeatureStorage(flag: string) {
-        console.log(
-            `Switched toggle state for flag [${flag}] to [${FEATURE_STATES[flag]}].`,
-        );
-        chrome.storage.sync.set({ [flag]: FEATURE_STATES[flag] });
+        console.log(`Switched toggle state for flag [${flag}] to [${feature_flag_states[flag]}].`);
+        chrome.storage.sync.set({ feature_flags: { ...feature_flag_states, [flag]: feature_flag_states[flag] } });
     }
 
     function toggleDescription(flag: string) {
-        expandedFlag = expandedFlag === flag ? null : flag;
+        expanded_flag = expanded_flag === flag ? null : flag;
     }
 </script>
 
@@ -36,22 +30,22 @@
                 {feature.name}
                 <button
                     class="info-btn"
-                    class:active={expandedFlag === feature.flag}
-                    class:hovered={hoveredFlag === feature.flag}
+                    class:active={expanded_flag === feature.flag}
+                    class:hovered={hovered_flag === feature.flag}
                     on:click={() => toggleDescription(feature.flag)}
-                    on:mouseenter={() => (hoveredFlag = feature.flag)}
-                    on:mouseleave={() => (hoveredFlag = null)}
+                    on:mouseenter={() => (hovered_flag = feature.flag)}
+                    on:mouseleave={() => (hovered_flag = null)}
                     aria-label="More info">i</button
                 >
             </span>
             <input
                 type="checkbox"
-                bind:checked={FEATURE_STATES[feature.flag]}
-                disabled={FEATURE_STATES[feature.flag] === undefined}
+                bind:checked={feature_flag_states[feature.flag]}
+                disabled={feature_flag_states[feature.flag] === undefined}
                 on:change={() => updateFeatureStorage(feature.flag)}
             />
         </div>
-        {#if expandedFlag === feature.flag}
+        {#if expanded_flag === feature.flag}
             <p class="feature-desc" transition:slide={{ duration: 200 }}>
                 {feature.desc}
             </p>

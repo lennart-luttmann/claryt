@@ -6,7 +6,7 @@
         "enabled": true
     },
     {
-        "flag": "feed_watcher",
+        "flag": "feed_watchdog",
         "name": "Hide YouTube Shorts from feed.",
         "desc": "Completely hide the YouTube Shorts section from your video feed.",
         "enabled": true
