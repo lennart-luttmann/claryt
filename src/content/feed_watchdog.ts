@@ -19,3 +19,10 @@ observer.observe(document.body, {
     childList: true,
     subtree: true,
 });
+
+// Run the watchdog if the state of the feature flag toggle changes.
+chrome.storage.sync.onChanged.addListener((changes) => {
+    if (!!changes["feature_flag.feed_watchdog"]?.newValue) {
+        feed_watchdog();
+    }
+});

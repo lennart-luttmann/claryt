@@ -13,7 +13,7 @@ const YOUTUBE_HOMEPAGE_URL = "https://www.youtube.com";
 // Register listener for url updates.
 chrome.tabs.onUpdated.addListener(async (tab_id, change_info, _) => {
     // Check whether feature flag is enabled.
-    if (await asyncGetFeatureFlag("url_intercept")) {
+    if (!(await asyncGetFeatureFlag("url_intercept"))) {
         console.debug("The URL updated but url_intercept is disabled.");
         return;
     }
