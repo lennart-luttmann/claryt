@@ -1,0 +1,14 @@
+[
+    {
+        "flag": "url_intercept",
+        "name": "Disable YouTube Shorts urls.",
+        "desc": "Make any YouTube Shorts url redirect back to the YouTube homepage.",
+        "enabled": true
+    },
+    {
+        "flag": "feed_watchdog",
+        "name": "Hide YouTube Shorts from feed.",
+        "desc": "Completely hide the YouTube Shorts section from your video feed.",
+        "enabled": true
+    }
+]

@@ -4,12 +4,20 @@
     "description": "A Chromium browser extension to block Youtube shorts",
     "type": "module",
     "scripts": {
-        "build": "node scripts/build.js",
-        "clean": "rm -rf build"
+        "dev:clean": "rm -rf dev",
+        "dev": "npm run dev:clean && DEV_MODE=true vite build",
+        "build:clean": "rm -rf build",
+        "build": "npm run build:clean && vite build"
     },
     "devDependencies": {
+        "@sveltejs/vite-plugin-svelte": "^7.0.0",
         "@types/chrome": "^0.0.287",
         "eslint": "^9.0.0",
-        "typescript": "^5.9.3"
+        "prettier": "^3.8.1",
+        "prettier-plugin-svelte": "^3.5.1",
+        "svelte": "^5.54.0",
+        "typescript": "^5.9.3",
+        "vite": "^8.0.0",
+        "vite-plugin-static-copy": "^3.3.0"
     }
 }
