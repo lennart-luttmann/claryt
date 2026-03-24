@@ -1,5 +1,5 @@
 {
-    "name": "yt-longs",
+    "name": "ClarYT",
     "version": "1.0.0",
     "description": "A Chromium browser extension to block Youtube shorts",
     "type": "module",
@@ -9,7 +9,7 @@
         "build:clean": "rm -rf build",
         "build": "npm run build:clean && vite build",
         "bundle:clean": "rm -rf dist",
-        "bundle": "npm run build && npm run bundle:clean && mkdir -p dist && cd build && zip -r ../dist/yt-longs-chrome-v$(node -p \"require('../static/manifest.json').version\").zip ."
+        "bundle": "npm run build && npm run bundle:clean && mkdir -p dist && cd build && zip -r ../dist/claryt-chrome-v$(node -p \"require('../static/manifest.json').version\").zip ."
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^7.0.0",

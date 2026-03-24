@@ -1,4 +1,4 @@
-name: YT-Longs Release
+name: ClarYT Release
 
 on:
     release:
@@ -23,7 +23,7 @@ jobs:
               uses: actions/upload-artifact@v4
               with:
                   name: dist
-                  path: dist/yt-longs-*.zip
+                  path: dist/claryt-*.zip
                   retention-days: 1
 
     release:
