@@ -7,7 +7,9 @@
         "dev:clean": "rm -rf dev",
         "dev": "npm run dev:clean && DEV_MODE=true vite build",
         "build:clean": "rm -rf build",
-        "build": "npm run build:clean && vite build"
+        "build": "npm run build:clean && vite build",
+        "bundle:clean": "rm -rf dist",
+        "bundle": "npm run build && npm run bundle:clean && mkdir -p dist && cd build && zip -r ../dist/yt-longs-chrome-v$(node -p \"require('../static/manifest.json').version\").zip ."
     },
     "devDependencies": {
         "@sveltejs/vite-plugin-svelte": "^7.0.0",
