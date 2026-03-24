@@ -34,7 +34,7 @@
 </script>
 
 <div class="container">
-    <h1 class="title">YouTube Longs Dashboard</h1>
+    <h1 class="title">ClarYT Dashboard</h1>
 
     {#each features as feature, i}
         {#if i > 0}<hr class="separator" />{/if}
