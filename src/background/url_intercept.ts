@@ -5,7 +5,7 @@
 import { asyncGetFeatureFlag } from "./storage_cache";
 
 /** Regex to detect YouTube shorts URLs. */
-const SHORT_URL_REGEX = /^(https?:\/\/)?(www\.)?youtube\.com\/shorts(\/|$)/;
+const SHORTS_URL_REGEX = /^(https?:\/\/)?(www\.)?youtube\.com\/shorts(\/|$)/;
 
 /** URL to redirect to. */
 const YOUTUBE_HOMEPAGE_URL = "https://www.youtube.com";
@@ -28,7 +28,7 @@ chrome.tabs.onUpdated.addListener(async (tab_id, change_info, _) => {
     }
 
     // Redirect to Youtube homepage if url is a shorts url.
-    if (SHORT_URL_REGEX.test(url)) {
+    if (SHORTS_URL_REGEX.test(url)) {
         console.debug("Detected shorts url. Redirecting...");
         chrome.tabs.update(tab_id, { url: YOUTUBE_HOMEPAGE_URL });
     }

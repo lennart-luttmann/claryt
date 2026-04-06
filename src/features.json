@@ -1,14 +1,20 @@
 [
     {
         "flag": "url_intercept",
-        "name": "Disable YouTube Shorts urls.",
+        "name": "Disable Shorts urls.",
         "desc": "Make any YouTube Shorts url redirect back to the YouTube homepage.",
         "enabled": true
     },
     {
         "flag": "feed_watchdog",
-        "name": "Hide YouTube Shorts from feed.",
+        "name": "Hide Shorts.",
         "desc": "Completely hide the YouTube Shorts section from your video feed.",
+        "enabled": true
+    },
+    {
+        "flag": "comment_watchdog",
+        "name": "Hide comments.",
+        "desc": "Automatically hide the comment section on long form videos.",
         "enabled": true
     }
 ]

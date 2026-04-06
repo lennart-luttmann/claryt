@@ -25,6 +25,7 @@ export default defineConfig({
                 dashboard: "./dashboard/index.html",
                 background: "./background/init.ts",
                 feed_watchdog: "./content/feed_watchdog.ts",
+                comment_watchdog: "./content/comment_watchdog.ts",
             },
             output: {
                 entryFileNames: "[name].js",
