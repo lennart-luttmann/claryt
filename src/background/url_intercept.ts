@@ -2,18 +2,22 @@
  * Background service that automatically redirects away from any youtube shorts link.
  */
 
-import { asyncGetFeatureFlag } from "./storage_cache";
+import { async_get_feature_flag } from "./storage_cache";
 
-/** Regex to detect YouTube shorts URLs. */
-const SHORTS_URL_REGEX = /^(https?:\/\/)?(www\.)?youtube\.com\/shorts(\/|$)/;
+/**
+ * Regex to detect YouTube shorts URLs.
+ */
+const SHORTS_URL_REGEX = /^(https?:\/\/)?(www\.)?youtube\.com\/shorts(\/|\?|$)/;
 
-/** URL to redirect to. */
+/**
+ * URL to redirect to.
+ */
 const YOUTUBE_HOMEPAGE_URL = "https://www.youtube.com";
 
 // Register listener for url updates.
 chrome.tabs.onUpdated.addListener(async (tab_id, change_info, _) => {
     // Check whether feature flag is enabled.
-    if (!(await asyncGetFeatureFlag("url_intercept"))) {
+    if (!(await async_get_feature_flag("url_intercept"))) {
         console.debug("The URL updated but url_intercept is disabled.");
         return;
     }

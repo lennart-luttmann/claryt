@@ -22,13 +22,13 @@
     });
 
     /** Update the stored value of a flag with the cache. */
-    function syncFeatureStorage(flag: string) {
+    function sync_feature_storage(flag: string) {
         console.log(`Switched toggle state for flag [${flag}] to [${feature_flag_cache[flag]}].`);
         chrome.storage.sync.set({ [FEATURE_FLAG_PREFIX + flag]: feature_flag_cache[flag] });
     }
 
     /** Toggle  descriptor dropdown on a feature. */
-    function toggleDescription(flag: string) {
+    function toggle_description(flag: string) {
         expanded_flag = expanded_flag === flag ? null : flag;
     }
 </script>
@@ -45,7 +45,7 @@
                     class="info-btn"
                     class:active={expanded_flag === feature.flag}
                     class:hovered={hovered_flag === feature.flag}
-                    on:click={() => toggleDescription(feature.flag)}
+                    on:click={() => toggle_description(feature.flag)}
                     on:mouseenter={() => (hovered_flag = feature.flag)}
                     on:mouseleave={() => (hovered_flag = null)}
                     aria-label="More info">i</button
@@ -55,7 +55,7 @@
                 type="checkbox"
                 bind:checked={feature_flag_cache[feature.flag]}
                 disabled={feature_flag_cache[feature.flag] === undefined}
-                on:change={() => syncFeatureStorage(feature.flag)}
+                on:change={() => sync_feature_storage(feature.flag)}
             />
         </div>
         {#if expanded_flag === feature.flag}
