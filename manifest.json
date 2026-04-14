@@ -5,16 +5,16 @@
     "description": "An extension to disable certain YouTube UI elements or adjust the UX to your liking.",
     "permissions": ["tabs", "activeTab", "storage"],
     "action": {
-        "default_popup": "dashboard/index.html"
+        "default_popup": "src/dashboard/index.html"
     },
     "background": {
-        "service_worker": "background.js",
+        "service_worker": "src/background/init.ts",
         "type": "module"
     },
     "content_scripts": [
         {
             "matches": ["*://*.youtube.com/*"],
-            "js": ["feed_watchdog.js"],
+            "js": ["src/content/feed_watchdog.js", "src/content/comment_watchdog.js"],
             "run_at": "document_idle"
         }
     ]

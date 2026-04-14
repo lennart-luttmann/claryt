@@ -1,36 +1,24 @@
 import path from "path";
 import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
-import { viteStaticCopy } from "vite-plugin-static-copy";
+import webExtension from "vite-plugin-web-extension";
 
 export default defineConfig({
-    root: "src",
+    root: ".",
     resolve: {
         alias: {
-            $: path.resolve(__dirname, "src"),
+            $: path.resolve(__dirname, "./src"),
         },
     },
     plugins: [
         svelte(),
-        viteStaticCopy({
-            targets: [{ src: "../static/*", dest: ".", flatten: true }],
+        webExtension({
+            manifest: "manifest.json",
+            additionalInputs: [],
         }),
     ],
     build: {
-        outDir: process.env.DEV_MODE ? "../dev" : "../build",
+        outDir: process.env.DEV_MODE ? "dev" : "build",
         watch: process.env.DEV_MODE ? {} : null,
-        emptyOutDir: false,
-        rollupOptions: {
-            input: {
-                dashboard: "./dashboard/index.html",
-                background: "./background/init.ts",
-                feed_watchdog: "./content/feed_watchdog.ts",
-            },
-            output: {
-                entryFileNames: "[name].js",
-                chunkFileNames: "[name].js",
-                assetFileNames: "[name][extname]",
-            },
-        },
     },
 });

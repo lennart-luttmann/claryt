@@ -17,9 +17,9 @@ const feature_flag_storage_init_promise = chrome.storage.sync.get().then((storag
 });
 
 /** Get the current state of a feature flag.*/
-async function asyncGetFeatureFlag(flag: string): Promise<boolean> {
+async function async_get_feature_flag(flag: string): Promise<boolean> {
     await feature_flag_storage_init_promise;
     return (await chrome.storage.sync.get(FEATURE_FLAG_PREFIX + flag))[FEATURE_FLAG_PREFIX + flag] ?? false;
 }
 
-export { asyncGetFeatureFlag, feature_flag_storage_init_promise };
+export { async_get_feature_flag, feature_flag_storage_init_promise };
