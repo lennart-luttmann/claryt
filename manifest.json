@@ -14,8 +14,8 @@
     "content_scripts": [
         {
             "matches": ["*://*.youtube.com/*"],
-            "js": ["src/content/feed_watchdog.js", "src/content/comment_watchdog.js"],
-            "run_at": "document_idle"
+            "js": ["src/content/feed.ts", "src/content/ytwatch.ts"],
+            "run_at": "document_start"
         }
     ]
 }
