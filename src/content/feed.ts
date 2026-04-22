@@ -3,23 +3,32 @@
  */
 
 import { error_invalid_context_ignore } from "$/util/error_util";
+import { CSS_NOSIZE } from "$/util/style_util";
 
 (() => {
-    function watchdog() {
+    /**
+     * Name of the remove shorts feed feature flag.
+     */
+    const RM_SHORTS_FEED_FEATURE_FLAG = "feature_flag.rm_shorts_feed";
+
+    // Construct shorts feed hider.
+    const shorts_feed_hider = document.createElement("style");
+    shorts_feed_hider.textContent = `.ytd-rich-shelf-renderer:has(ytm-shorts-lockup-view-model-v2) ${CSS_NOSIZE}`;
+
+    /**
+     * Hides or restores shorts in the video feed via style injection.
+     */
+    function manage_shorts_feed_hider() {
         try {
-            // Check dashboard flag state.
             chrome.storage.sync
-                .get("feature_flag.feed_watchdog")
+                .get(RM_SHORTS_FEED_FEATURE_FLAG)
                 .then((feature_flag) => {
-                    if (!feature_flag["feature_flag.feed_watchdog"]) return;
-
-                    // Remove shorts from html.
-                    document
-                        .querySelectorAll("ytm-shorts-lockup-view-model-v2")
-                        .forEach((el) => el.closest("ytd-rich-shelf-renderer")?.remove());
+                    if (!!feature_flag[RM_SHORTS_FEED_FEATURE_FLAG]) {
+                        document.documentElement.appendChild(shorts_feed_hider);
+                    } else if (document.documentElement.contains(shorts_feed_hider)) {
+                        document.documentElement.removeChild(shorts_feed_hider);
+                    }
                 })
-
-                // Catch invalidated context errors.
                 .catch(error_invalid_context_ignore);
         } catch (error) {
             error_invalid_context_ignore(error);
@@ -27,32 +36,23 @@ import { error_invalid_context_ignore } from "$/util/error_util";
     }
 
     // Run on startup.
-    watchdog();
+    manage_shorts_feed_hider();
 
-    // Start observer.
-    let timeout: number | undefined;
-    const observer = new MutationObserver(() => {
-        if (!chrome.runtime?.id) {
-            observer.disconnect();
-            return;
-        }
-        clearTimeout(timeout);
-        timeout = setTimeout(watchdog, 200);
+    // Construct observer.
+    let shorts_feed_hider_observer_timeout: number | undefined;
+    const shorts_feed_hider_observer = new MutationObserver(() => {
+        clearTimeout(shorts_feed_hider_observer_timeout);
+        shorts_feed_hider_observer_timeout = setTimeout(manage_shorts_feed_hider, 2000);
     });
-    try {
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-        });
 
-        // Run the watchdog if the state of the feature flag toggle changes.
+    // Start observer and run on dashboard state change.
+    try {
+        shorts_feed_hider_observer.observe(shorts_feed_hider, { attributes: true, characterData: true });
         chrome.storage.sync.onChanged.addListener((changes) => {
-            if (chrome.runtime?.id && !!changes["feature_flag.feed_watchdog"]?.newValue) {
-                watchdog();
+            if (RM_SHORTS_FEED_FEATURE_FLAG in changes) {
+                manage_shorts_feed_hider();
             }
         });
-
-        // Catch invalidated context errors.
     } catch (error) {
         error_invalid_context_ignore(error);
     }

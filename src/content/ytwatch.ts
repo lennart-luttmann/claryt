@@ -3,56 +3,66 @@
  */
 
 import { error_invalid_context_ignore } from "$/util/error_util";
+import { CSS_NOSIZE } from "$/util/style_util";
 
 (() => {
     /**
-     * Selector used to detect the watch next section of the yt watch page.
+     * Timeout duration of the watchdog observer in milliseconds.
      */
-    const WATCH_NEXT_SELECTOR = "ytd-watch-next-secondary-results-renderer";
+    const OBSERVER_TIMEOUT = 2000;
 
     /**
-     * Selectors used to detect comment section renderers.
+     * Name of the remove watch-next feature flag.
      */
-    const COMMENT_SECTION_SELECTOR = "ytd-item-section-renderer.ytd-comments";
+    const RM_WATCH_NEXT_FEATURE_FLAG = "feature_flag.rm_watch_next";
 
     /**
-     * Regex to detect YouTube watch URLs.
+     * Name of the remove comment feature flag.
      */
-    const WATCH_URL_REGEX = /^(https?:\/\/)?(www\.)?youtube\.com\/watch(\/|\?|$)/;
+    const RM_COMMENTS_FEATURE_FLAG = "feature_flag.rm_comments";
+
+    // Construct watch-next hider.
+    const watch_next_hider = document.createElement("style");
+    watch_next_hider.textContent = `#secondary:has(.ytd-watch-next-secondary-results-renderer) ${CSS_NOSIZE}`;
+
+    // Construct comment hider.
+    const comment_hider = document.createElement("style");
+    comment_hider.textContent = `#comments ${CSS_NOSIZE}`;
 
     /**
-     * Checks whether the current url is a YouTube watch url.
+     * Hide or show the watch-next sction via style injection.
      */
-    function check_is_ytwatch() {
-        const url = window.location.href;
-        return !!url && WATCH_URL_REGEX.test(url);
-    }
-
-    /**
-     * Hides comment section from current html page.
-     */
-    function watchdog() {
+    function manage_watch_next_hider() {
         try {
-            // Remove watch-next.
+            // Remove or restore watch-next.
             chrome.storage.sync
-                .get("feature_flag.rm_watch_next")
+                .get(RM_WATCH_NEXT_FEATURE_FLAG)
                 .then((feature_flag) => {
-                    if (check_is_ytwatch() && !!feature_flag["feature_flag.rm_watch_next"]) {
-                        document.querySelectorAll(WATCH_NEXT_SELECTOR).forEach((element) => {
-                            element.remove();
-                        });
+                    if (!!feature_flag[RM_WATCH_NEXT_FEATURE_FLAG]) {
+                        document.documentElement.appendChild(watch_next_hider);
+                    } else if (document.documentElement.contains(watch_next_hider)) {
+                        document.documentElement.removeChild(watch_next_hider);
                     }
                 })
                 .catch(error_invalid_context_ignore);
+        } catch (error) {
+            error_invalid_context_ignore(error);
+        }
+    }
 
-            // Remove comment section.
+    /**
+     * Hide or show the comment section via style injection.
+     */
+    function manage_comment_hider() {
+        try {
+            // Remove or restore comment section.
             chrome.storage.sync
-                .get("feature_flag.rm_comments")
+                .get(RM_COMMENTS_FEATURE_FLAG)
                 .then((feature_flag) => {
-                    if (check_is_ytwatch() && !!feature_flag["feature_flag.rm_comments"]) {
-                        document.querySelectorAll(COMMENT_SECTION_SELECTOR).forEach((element) => {
-                            element.remove();
-                        });
+                    if (!!feature_flag[RM_COMMENTS_FEATURE_FLAG]) {
+                        document.documentElement.appendChild(comment_hider);
+                    } else if (document.documentElement.contains(comment_hider)) {
+                        document.documentElement.removeChild(comment_hider);
                     }
                 })
                 .catch(error_invalid_context_ignore);
@@ -62,29 +72,37 @@ import { error_invalid_context_ignore } from "$/util/error_util";
     }
 
     // Run on startup.
-    watchdog();
+    manage_watch_next_hider();
+    manage_comment_hider();
 
-    // Build observer.
-    let watchdog_timeout: number | undefined;
-    const watchdog_observer = new MutationObserver(() => {
-        if (!chrome.runtime?.id) {
-            watchdog_observer.disconnect();
-            return;
-        }
-
-        clearTimeout(watchdog_timeout);
-        watchdog_timeout = setTimeout(watchdog, 200);
+    // Run on quiet video load.
+    window.addEventListener("yt-navigate-finish", () => {
+        manage_watch_next_hider();
+        manage_comment_hider();
     });
-    try {
-        watchdog_observer.observe(document.body, {
-            childList: true,
-            subtree: true,
-        });
 
-        // Run observer if dashboard state changes.
+    // Build observers.
+    let watch_next_hider_observer_timeout: number | undefined;
+    let comment_hider_observer_timeout: number | undefined;
+    const watch_next_hider_observer = new MutationObserver(() => {
+        clearTimeout(watch_next_hider_observer_timeout);
+        watch_next_hider_observer_timeout = setTimeout(manage_watch_next_hider, OBSERVER_TIMEOUT);
+    });
+    const comment_hider_observer = new MutationObserver(() => {
+        clearTimeout(comment_hider_observer_timeout);
+        comment_hider_observer_timeout = setTimeout(manage_comment_hider, OBSERVER_TIMEOUT);
+    });
+
+    // Start observers and run on dashboard state change.
+    try {
+        watch_next_hider_observer.observe(watch_next_hider, { attributes: true, characterData: true });
+        comment_hider_observer.observe(comment_hider, { attributes: true, characterData: true });
         chrome.storage.sync.onChanged.addListener((changes) => {
-            if (chrome.runtime?.id && !!changes["feature_flag.comment_watchdog"]?.newValue) {
-                watchdog();
+            if (RM_WATCH_NEXT_FEATURE_FLAG in changes) {
+                manage_watch_next_hider();
+            }
+            if (RM_COMMENTS_FEATURE_FLAG in changes) {
+                manage_comment_hider();
             }
         });
     } catch (error) {

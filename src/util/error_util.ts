@@ -1,3 +1,7 @@
+/*
+ * This module contains util methods for error handling.
+ */
+
 const EXTENSION_CONTEXT_INVALIDATED_SUBSTRING = "Extension context invalidated";
 
 /*
