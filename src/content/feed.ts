@@ -1,11 +1,11 @@
 /**
- * The role of the feed watchdog is to remove shorts from the youtube homepage feed.
+ * This script removes unwanted elements like shorts from the homepage video feed and the watch next feed.
  */
 
 import { error_invalid_context_ignore } from "$/util/error_util";
 
 (() => {
-    function feed_watchdog() {
+    function watchdog() {
         try {
             // Check dashboard flag state.
             chrome.storage.sync
@@ -27,7 +27,7 @@ import { error_invalid_context_ignore } from "$/util/error_util";
     }
 
     // Run on startup.
-    feed_watchdog();
+    watchdog();
 
     // Start observer.
     let timeout: number | undefined;
@@ -37,7 +37,7 @@ import { error_invalid_context_ignore } from "$/util/error_util";
             return;
         }
         clearTimeout(timeout);
-        timeout = setTimeout(feed_watchdog, 200);
+        timeout = setTimeout(watchdog, 200);
     });
     try {
         observer.observe(document.body, {
@@ -48,7 +48,7 @@ import { error_invalid_context_ignore } from "$/util/error_util";
         // Run the watchdog if the state of the feature flag toggle changes.
         chrome.storage.sync.onChanged.addListener((changes) => {
             if (chrome.runtime?.id && !!changes["feature_flag.feed_watchdog"]?.newValue) {
-                feed_watchdog();
+                watchdog();
             }
         });
 
