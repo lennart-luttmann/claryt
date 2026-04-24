@@ -22,5 +22,11 @@
         "name": "Hide watch-next.",
         "desc": "Hide the watch-next section next to or below videos.",
         "enabled": true
+    },
+    {
+        "flag": "rm_postvid_suggestions",
+        "name": "Hide post video suggestions.",
+        "desc": "Hides the video suggestions showing up inside the video player after a video finishes.",
+        "enabled": true
     }
 ]
