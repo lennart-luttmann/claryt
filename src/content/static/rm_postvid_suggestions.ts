@@ -18,6 +18,10 @@ import register_ui_hider from "./common/register_ui_hider";
 
     // Construct and register shorts feed hider.
     const hider = document.createElement("style");
-    hider.textContent = `.ytp-fullscreen-grid-stills-container:has(a.ytp-suggestion-set) ${CSS_NOSIZE}`;
+    hider.textContent = `
+/* Hides video suggestions showing up in the playback view after the video finishes. */
+.ytp-fullscreen-grid-stills-container:has(a.ytp-suggestion-set)
+${CSS_NOSIZE}
+`;
     register_ui_hider(hider, FEATURE_FLAG, OBSERVER_TIMEOUT_DURATION);
 })();

@@ -18,6 +18,9 @@ import register_ui_hider from "./common/register_ui_hider";
 
     // Construct and register comment hider.
     const hider = document.createElement("style");
-    hider.textContent = `#comments ${CSS_NOSIZE}`;
+    hider.textContent = `
+/* Hides the comment section */
+#comments ${CSS_NOSIZE}
+`;
     register_ui_hider(hider, FEATURE_FLAG, OBSERVER_TIMEOUT_DURATION);
 })();

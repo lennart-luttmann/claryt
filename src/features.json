@@ -1,31 +1,43 @@
 [
     {
         "flag": "url_deny_shorts",
-        "name": "Disable shorts URLs.",
+        "name": "Disable shorts URLs",
         "desc": "Make any YouTube shorts URL redirect back to the YouTube homepage.",
         "enabled": true
     },
     {
         "flag": "rm_shorts_feed",
-        "name": "Hide shorts.",
+        "name": "Hide shorts",
         "desc": "Completely hide the YouTube Shorts section from your video feed.",
         "enabled": true
     },
     {
+        "flag": "rm_sponsored_content",
+        "name": "Hide sponsored content",
+        "desc": "Hide any sponsored content in the video feed. Not needed if you are using a dedicated ad blocker.",
+        "enabled": true
+    },
+    {
+        "flag": "rm_paid_content",
+        "name": "Hide paid content",
+        "desc": "Hides any content that requires payment to access, like movies, from the feed.",
+        "enabled": true
+    },
+    {
         "flag": "rm_comments",
-        "name": "Hide comments.",
+        "name": "Hide comments",
         "desc": "Automatically hide the comment section on long form videos.",
         "enabled": true
     },
     {
         "flag": "rm_watch_next",
-        "name": "Hide watch-next.",
+        "name": "Hide watch-next",
         "desc": "Hide the watch-next section next to or below videos.",
         "enabled": true
     },
     {
         "flag": "rm_postvid_suggestions",
-        "name": "Hide post video suggestions.",
+        "name": "Hide post video suggestions",
         "desc": "Hides the video suggestions showing up inside the video player after a video finishes.",
         "enabled": true
     }
