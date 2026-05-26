@@ -14,7 +14,7 @@
     "content_scripts": [
         {
             "matches": ["*://*.youtube.com/*"],
-            "js": ["src/content/feed.ts", "src/content/ytwatch.ts"],
+            "js": ["src/content/global_docstart.ts"],
             "run_at": "document_start"
         }
     ]
