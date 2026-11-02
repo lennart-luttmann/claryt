@@ -12,14 +12,14 @@
         "bundle": "npm run build && npm run bundle:clean && mkdir -p dist && cd build && zip -r ../dist/claryt-chrome-v$(node -p \"require('../static/manifest.json').version\").zip ."
     },
     "devDependencies": {
-        "@sveltejs/vite-plugin-svelte": "^7.0.0",
-        "@types/chrome": "^0.0.287",
-        "eslint": "^9.0.0",
-        "prettier": "^3.8.1",
-        "prettier-plugin-svelte": "^3.5.1",
-        "svelte": "^5.54.0",
-        "typescript": "^5.9.3",
-        "vite": "^8.0.0",
+        "@sveltejs/vite-plugin-svelte": "^7.3.1",
+        "@types/chrome": "^0.3.7",
+        "eslint": "^10.14.0",
+        "prettier": "^3.9.10",
+        "prettier-plugin-svelte": "^4.1.1",
+        "svelte": "^5.57.3",
+        "typescript": "^7.0.2",
+        "vite": "^8.3.5",
         "vite-plugin-web-extension": "^4.5.1"
     }
 }
